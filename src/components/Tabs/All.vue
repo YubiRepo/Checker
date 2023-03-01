@@ -12,7 +12,7 @@
             <v-row class="mt-3">
               <v-col v-for="(row) in dine_in" cols="2" v-if="dine_in != ''">
                 <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
-                  @click="getSalesOrderDetail(row.id)">
+                  @click="getSalesOrderDetail(row.id, row.table.no_table)">
                   <v-row class="flex mx-auto">
                     <v-col width="100%" class="text-center" lg="12">
                       <h3 class="mb-4">Order No</h3>
@@ -45,9 +45,10 @@
                             <v-card-text>
                               <v-row>
                                 <v-col cols="2" class="text-center ml-15 rounded">
-                                  <v-card color="secondary" class="pa-6" height="100%">
+                                  <v-card class="pa-3" height="100%" elevation="1">
                                     <v-card-title>
-                                      <h3>Order No. {{ header.no_order }}</h3>
+                                      <h5>Order No. {{ header.no_order }}</h5>
+                                      <h5>Table No. {{ no_table }}</h5>
                                     </v-card-title>
                                   </v-card>
                                 </v-col>
@@ -177,7 +178,7 @@
             <v-row class="mt-3">
               <v-col v-for="(row) in take_away" cols="2" v-if="take_away != ''">
                 <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
-                  @click="getSalesOrderDetail(row.id)">
+                  @click="getSalesOrderDetail(row.id, row.table.no_table)">
                   <v-row class="flex mx-auto">
                     <v-col width="100%" class="text-center" lg="12">
                       <h3 class="mb-4">Order No</h3>
@@ -209,10 +210,11 @@
                             <v-divider></v-divider>
                             <v-card-text>
                               <v-row>
-                                <v-col cols="2" class="text-center ml-15 rounded">
-                                  <v-card color="secondary" class="pa-6" height="100%">
+                                <v-col cols="2" class="ml-15 rounded">
+                                  <v-card class="pa-3" height="100%" elevation="1">
                                     <v-card-title>
-                                      <h3>Order No. {{ header.no_order }}</h3>
+                                      <h5>Order No. {{ header.no_order }}</h5>
+                                      <h5>Table No. {{ no_table }}</h5>
                                     </v-card-title>
                                   </v-card>
                                 </v-col>
@@ -352,6 +354,7 @@ export default {
       sales_orders: [],
       on_process: 0,
       form_data: [],
+      no_table: '',
 
     }
   },
@@ -375,12 +378,13 @@ export default {
       });
     },
 
-    async getSalesOrderDetail(id) {
+    async getSalesOrderDetail(id, no_table) {
       this.dialog = true;
       await $axios.get("/checker/sales-orders/" + id, {
       }).then(({ data }) => {
         this.sales_orders = data.sales_orders.details;
         this.header = data.sales_orders
+        this.no_table = no_table
         this.detail = data.sales_orders.details
         this.detail.map((item) => {
           Object.assign(item, { qty_out: item.on_done, on_process: item.qty - item.on_done })
