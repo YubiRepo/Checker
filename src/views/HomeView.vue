@@ -5,28 +5,26 @@
         <v-col xs="12" sm="12" md="6" lg="2">
           <v-card color="primary">
             <v-card-title>
-              <h4><strong>Dine In :</strong></h4>
+              <h4><strong>Dine In : {{ dine_in }}</strong></h4>
             </v-card-title>
           </v-card>
           <v-card-title class="text-left">
-            <h4><strong>Total Sales Order : {{total}}</strong></h4> 
+            <h4><strong>Total Sales Order : {{ total }}</strong></h4>
           </v-card-title>
         </v-col>
         <v-col xs="12" sm="12" md="6" lg="2">
           <v-card color="primary">
             <v-card-title>
-              <h4><strong>Take Away :</strong></h4>
+              <h4><strong>Take Away : {{ take_away }}</strong></h4>
             </v-card-title>
           </v-card>
         </v-col>
         <v-col xs="12" sm="12" md="6" lg="5" class="text-center">
           <h1><strong>Order List</strong></h1>
         </v-col>
-        <!-- <v-col xs="12" sm="12" md="6" lg="1" class="text-center">
-          <v-btn color="#00000029" size="large" type="button" variant="elevated">
-            All List >>
-          </v-btn>
-        </v-col> -->
+        <v-col xs="12" sm="12" md="6" lg="3" class="text-end">
+          <v-btn variant="outlined" color="error" @click="logout">Logout</v-btn>
+        </v-col>
       </v-row>
     </v-app-bar>
     <v-main>
@@ -44,7 +42,7 @@
               <v-tab value="2">
                 <v-card color="white" width="200">
                   <v-card-title>
-                   <h3><strong>Dine In</strong></h3>
+                    <h3><strong>Dine In</strong></h3>
                   </v-card-title>
                 </v-card>
               </v-tab>
@@ -80,7 +78,7 @@ import TheWelcome from '../components/TheWelcome.vue'
 import TabAll from '../components/Tabs/All.vue'
 import TabDineIn from '../components/Tabs/DineIn.vue'
 import TabTakeAway from '../components/Tabs/TakeAway.vue'
-import axios from 'axios'
+import $axios from '@/plugins/api.js'
 export default {
   name: 'HomeView',
   components: {
@@ -92,18 +90,27 @@ export default {
   data() {
     return {
       tab: null,
-      card: {},
+      dine_in: 0,
+      take_away: 0,
       total: 0
     }
   },
 
   methods: {
     async getSalesOrder() {
-      await axios.get("/checker/sales-orders", {
+      await $axios.get("/checker/sales-orders", {
       }).then(({ data }) => {
-        this.total = data.sales_orders.dine_in + data.sales_orders.take_away;
+        this.dine_in = data.sales_orders.dine_in_count;
+        this.take_away = data.sales_orders.take_away_count;
+        this.total = data.sales_orders.all_count;
       });
     },
+
+
+    logout() {
+      this.$store.dispatch('auth/logout');
+      this.$router.push('/login');
+    }
   },
 
   created() {

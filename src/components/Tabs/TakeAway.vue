@@ -7,65 +7,170 @@
             <v-card-title>
             </v-card-title>
           </v-row>
-          <v-row class="mt-3">
-            <v-col v-for="(row) in take_away" cols="2" v-if="take_away != ''">
-              <v-card height="100%" color="yellow" class="pa-3">
-                <v-row>
-                  <v-col class="text-center mt-4" lg="5">
-                    <h4>Order No</h4>
-                    <v-card-text style="font-size:3em">
-                      {{ row.no_order }}
-                    </v-card-text>
-                  </v-col>
-                  <v-col class="text-right mt-4" lg="4">
-                    <h5>Tab For Detail</h5>
-                  </v-col>
-                  <v-col class="text-center mt-3" lg="3">
-                    <div class="text-center">
-                      <v-dialog v-model="dialog" width="auto">
-                        <template v-slot:activator="{ props }">
-                          <v-btn color="primary" v-bind="props" icon="mdi-gesture-tap">
-                          </v-btn>
-                        </template>
+          <v-form ref="form_data" v-model="form_valid">
+            <v-row class="mt-3">
+              <v-col v-for="(row) in take_away" cols="2" v-if="take_away != ''">
+                <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
+                  @click="getSalesOrderDetail(row.id)">
+                  <v-row class="flex mx-auto">
+                    <v-col width="100%" class="text-center" lg="12">
+                      <h3 class="mb-4">Order No</h3>
+                      <v-card-text style="font-size:4rem">
+                        {{ row.no_order }}
+                      </v-card-text>
+                    </v-col>
+                    <v-col class="text-right mt-4" lg="4">
+                    </v-col>
+                    <v-col class="text-left mt-3" lg="3">
+                      <div class="text-center">
+                        <v-dialog v-model="dialog" width="60%">
+                          <v-card width="100%">
+                            <v-row>
+                              <v-col class="text-right">
+                                <v-card-title class="text-h5">
+                                  Summary
+                                </v-card-title>
+                              </v-col>
+                              <v-col>
+                                <v-card-actions>
+                                  <v-spacer></v-spacer>
+                                  <v-btn color="green" variant="flat" @click="dialog = false">
+                                    Close Dialog
+                                  </v-btn>
+                                </v-card-actions>
+                              </v-col>
+                            </v-row>
+                            <v-divider></v-divider>
+                            <v-card-text>
+                              <v-row>
+                                <v-col cols="2" class="text-center ml-15 rounded">
+                                  <v-card color="secondary" class="pa-6" height="100%">
+                                    <v-card-title>
+                                      <h3>Order No. {{ header.no_order }}</h3>
+                                    </v-card-title>
+                                  </v-card>
+                                </v-col>
+                                <v-col cols="7" class="text-center">
+                                  <v-row class="pl-15">
+                                    <v-col cols="4">
+                                      <v-card color="green" class="pa-3">
+                                        <v-card-title>
+                                          <h1>{{ this.detail.reduce((acc, item) =>
+                                            acc + item.on_done, 0
+                                          ) }}</h1>
+                                          <h5>Done</h5>
+                                        </v-card-title>
+                                      </v-card>
+                                    </v-col>
+                                    <v-col cols="4">
+                                      <v-card color="yellow" class="pa-3">
+                                        <v-card-title>
+                                          <h1>{{ this.detail.reduce((acc, item) =>
+                                            acc + item.qty, 0
+                                          ) - this.detail.reduce((acc, item) =>
+                                            acc + item.on_done, 0
+                                          ) }}</h1>
+                                          <h5>Not Done</h5>
+                                        </v-card-title>
+                                      </v-card>
+                                    </v-col>
+                                    <v-col cols="4">
+                                      <v-card color="black" class="pa-3">
+                                        <v-card-title>
+                                          <h1>{{ detail.length }}</h1>
+                                          <h5>Items</h5>
+                                        </v-card-title>
+                                      </v-card>
+                                    </v-col>
+                                  </v-row>
+                                </v-col>
 
-                        <v-card>
-                          <v-card-text>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua.
-                          </v-card-text>
-                          <v-card-actions>
-                            <v-btn color="primary" block @click="dialog = false">Close Dialog</v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-divider></v-divider>
-                <v-row>
-                  <v-col class="text-center mt-4" lg="5">
-                    <h3>Table No.{{ row.table.no_table }}</h3>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-            <v-col v-else class="text-center">
-              <div class="card-body cart">
-                <div class="col-sm-12 empty-cart-cls text-center" >
-                  <img src="/src/assets/cart.png" width="100" height="100" class="img-fluid mb-4 mr-3">
-                  <!-- <v-icon class="img-fluid mb-4 mr-3">mdi-cart-remove</v-icon> -->
-                  <h3><strong>Your Sales Order Is Empty</strong></h3>
+                              </v-row>
+                              <v-row>
+                                <v-col cols="12">
+                                  <v-table>
+                                    <thead color="primary">
+                                      <tr>
+                                        <th>#</th>
+                                        <th>Item Name</th>
+                                        <th>Order</th>
+                                        <th class="text-center">Qty Out</th>
+                                        <th class="text-center">Balance</th>
+                                        <th class="text-center">Status</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr v-for="(items, index) in detail" :key="index">
+                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ items.item.name }}</td>
+                                        <td>{{ items.qty }}</td>
+                                        <td>
+                                          <div class="d-flex align-left flex-column pa-6">
+                                            <v-btn-toggle>
+                                              <v-btn type="button" icon="mdi-minus" @click="reduceQuantity(index)"
+                                                :disabled="items.qty == items.on_done"></v-btn>
+                                              <v-text-field type="number" v-model="items.qty_out" readonly></v-text-field>
+                                              <v-btn type="button" icon="mdi-plus" :disabled="items.qty == items.on_done"
+                                                @click="addQuantity(index)"></v-btn>
+                                            </v-btn-toggle>
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <div class="d-flex align-left flex-column pa-6">
+                                            <v-btn-toggle>
+                                              <v-text-field type="number" v-model="items.on_process"
+                                                readonly></v-text-field>
+                                            </v-btn-toggle>
+                                          </div>
+                                        </td>
+                                        <td class="text-center"><v-chip color="green" class="ma-2"
+                                            v-if="items.status == 'DONE'">
+                                            {{ items.status }}
+                                          </v-chip>
+                                          <v-chip color="black" class="ma-2" text-color="black" v-else>
+                                            {{ items.status }}
+                                          </v-chip>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </v-table>
+                                </v-col>
+                              </v-row>
+                              <v-divider></v-divider>
+                              <br>
+                              <v-btn color="primary" variant="flat" class="float-end" @click.stop="update">Update Sales
+                                Order</v-btn>
+                            </v-card-text>
+                          </v-card>
+                        </v-dialog>
+                      </div>
+                    </v-col>
+                  </v-row>
+                  <v-divider></v-divider>
+                  <v-row>
+                    <v-col class="text-center mt-4" lg="12">
+                      <h3>Table No. {{ row.table.no_table }}</h3>
+                    </v-col>
+                  </v-row>
+                </v-card>
+              </v-col>
+              <v-col v-else class="text-center">
+                <div class="card-body cart">
+                  <div class="col-sm-12 empty-cart-cls text-center">
+                    <img src="/src/assets/cart.png" width="100" height="100" class="img-fluid mb-4 mr-3">
+                    <h3><strong>Your Sales Order Is Empty</strong></h3>
+                  </div>
                 </div>
-              </div>
-            </v-col>
-          </v-row>
+              </v-col>
+            </v-row>
+          </v-form>
         </v-responsive>
       </v-container>
     </v-main>
   </v-app>
 </template>
 <script>
-import axios from 'axios'
+import $axios from '@/plugins/api.js'
 export default {
   name: 'TakeAway',
   components: {
@@ -73,18 +178,67 @@ export default {
   data() {
     return {
       dialog: false,
+      dine_in: [],
       take_away: [],
+      header: [],
+      detail: [],
+      sales_orders: {},
+      on_process: 0,
+      form_valid: false,
+      form_data: [],
+
     }
   },
   methods: {
+    async update() {
+      await $axios.put(
+        "/checker/sales-orders/set-status-detail",
+        this.detail
+      ).then(({ data }) => {
+        this.dialog = false
+        this.getSalesOrder()
+      });
+    },
+
     async getSalesOrder() {
-      await axios.get("http://192.168.1.57:8169/checker/sales-orders", {
+      await $axios.get("/checker/sales-orders", {
       }).then(({ data }) => {
         this.take_away = data.sales_orders.take_away
       });
     },
-  },
 
+    async getSalesOrderDetail(id) {
+      this.dialog = true;
+      await $axios.get("/checker/sales-orders/" + id, {
+      }).then(({ data }) => {
+
+        this.sales_orders
+        this.header = data.sales_orders
+        this.sales_orders = data.sales_orders.details
+        this.detail = data.sales_orders.details
+        this.detail.map((item) => {
+          Object.assign(item, { qty_out: item.on_done, on_process: item.qty - item.on_done })
+          item.qty_out = item.on_done
+        })
+      });
+    },
+
+    addQuantity(index) {
+      if (this.detail[index].qty_out >= this.detail[index].qty) {
+        return
+      }
+      this.detail[index].qty_out += 1
+      this.detail[index].on_process -= 1
+    },
+
+    reduceQuantity(index) {
+      if (this.detail[index].qty_out <= 0) {
+        return
+      }
+      this.detail[index].qty_out -= 1
+      this.detail[index].on_process += 1
+    },
+  },
   created() {
     this.getSalesOrder();
   }

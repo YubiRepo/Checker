@@ -2,33 +2,31 @@
     <v-sheet class="bg-deep-purple pa-12" rounded>
       <v-card class="mx-auto px-6 py-8" max-width="344">
         <v-form
-          v-model="form"
-          @submit.prevent="onSubmit"
+          ref = "form_login" lazy-validation
         >
           <v-text-field
-            v-model="email"
-            :readonly="loading"
-            :rules="[required]"
+            v-model="form_login.username"
             class="mb-2"
             clearable
-            label="Email"
-            placeholder="Enter your email"
+            label="Username"
+            placeholder="Enter your username"
+            :rules="rule_username"
           ></v-text-field>
   
           <v-text-field
-            v-model="password"
-            :readonly="loading"
-            :rules="[required]"
+            v-model="form_login.password"
+            density="compact"
+            type="password"
             clearable
             label="Password"
             placeholder="Enter your password"
           ></v-text-field>
   
           <br>
-  
           <v-btn
-            :disabled="!form"
-            :loading="loading"
+            :loading="btnLoading"
+            :disabled="btnLoading"
+            @click.prevent="handleLogin"
             block
             color="success"
             size="large"
@@ -43,26 +41,59 @@
   </template>
   
   <script>
+  import { mapActions,mapMutations,mapGetters,mapState } from 'vuex'
    export default {
+    name: 'Login',
     data: () => ({
-      form: false,
-      email: null,
-      password: null,
-      loading: false,
+      isLoading: false,
+      btnLoading: false,
+      form_valid: true,
+      form_error: false,
+      form_login: {
+        username: '',
+        password: ''
+      },
+      rule_username: [
+        v => !!v || 'Username is required',
+        v => (v && v.length <= 10) || 'Username must be less than 10 characters',
+      ],
+      rule_password: [
+        v => !!v || 'Password is required',
+        v => (v && v.length <= 10) || 'Password must be less than 10 characters',
+      ],
+
     }),
 
-    methods: {
-      onSubmit () {
-        if (!this.form) return
-
-        this.loading = true
-
-        setTimeout(() => (this.loading = false), 2000)
-      },
-      required (v) {
-        return !!v || 'Field is required'
-      },
+    created() {
+      if (this.isAuth){
+        this.$router.push("/home")
+      }
     },
+
+    computed: {
+      ...mapGetters(["isAuth"]),
+      ...mapState(["errors"]),
+    },
+
+    methods: {
+      ...mapActions("auth", ["submit"]),
+      ...mapActions("user", ["getUserLogin"]),
+      ...mapMutations(["CLEAR_ERRORS"]),
+
+      handleLogin(){
+        this.submit(this.form_login).then(() => {
+          if (this.isAuth){
+            this.CLEAR_ERRORS();
+            this.$router.push("/home")
+          }
+        })
+      }
+      
+    },
+    unmounted() {
+      this.getUserLogin();
+    }
+   
   }
   </script>
   

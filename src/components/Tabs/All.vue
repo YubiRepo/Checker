@@ -8,122 +8,163 @@
               <h3><strong>Dine In</strong></h3>
             </v-card-title>
           </v-row>
-          <v-row class="mt-3">
-            <v-col v-for="(row) in dine_in" cols="2" v-if="dine_in != ''">
-              <v-card height="100%" color="green" class="pa-3">
-                <v-row>
-                  <v-col class="text-center mt-4" lg="5">
-                    <h4>Order No</h4>
-                    <v-card-text style="font-size:3em">
-                      {{ row.no_order }}
-                    </v-card-text>
-                  </v-col>
-                  <v-col class="text-right mt-4" lg="4">
-                    <h5>Tab For Detail</h5>
-                  </v-col>
-                  <v-col class="text-left mt-3" lg="3">
-                    <div class="text-center">
-                      <v-dialog v-model="dialog" width="auto">
-                        <template v-slot:activator="{ props }">
-                          <v-btn color="primary" v-bind="props" icon="mdi-gesture-tap">
-                          </v-btn>
-                        </template>
-                        <v-card width="1000px">
-                          <v-card-title class="text-h5 text-center">
-                            Summary
-                          </v-card-title>
-                          <v-divider></v-divider>
-                          <v-card-text>
+          <v-form ref="form_data">
+            <v-row class="mt-3">
+              <v-col v-for="(row) in dine_in" cols="2" v-if="dine_in != ''">
+                <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
+                  @click="getSalesOrderDetail(row.id)">
+                  <v-row class="flex mx-auto">
+                    <v-col width="100%" class="text-center" lg="12">
+                      <h3 class="mb-4">Order No</h3>
+                      <v-card-text style="font-size:4rem">
+                        {{ row.no_order }}
+                      </v-card-text>
+                    </v-col>
+                    <v-col class="text-right mt-4" lg="4">
+                    </v-col>
+                    <v-col class="text-left mt-3" lg="3">
+                      <div class="text-center">
+                        <v-dialog v-model="dialog" width="60%">
+                          <v-card width="100%">
                             <v-row>
-                              <v-col cols="2">
-                                <h4>Order No. </h4>
-                                <h4>Table No. </h4>
+                              <v-col class="text-right">
+                                <v-card-title class="text-h5">
+                                  Summary
+                                </v-card-title>
                               </v-col>
-                              <v-col cols="7" class="text-center">
-                                <v-row class="pl-15">
-                                  <v-col cols="4">
-                                    <v-card color="green" class="pa-3">
-                                      <v-card-title>
-                                        <h1>2</h1>
-                                        <h5>Done</h5>
-                                      </v-card-title>
-                                    </v-card>
-                                  </v-col>
-                                  <v-col cols="4">
-                                    <v-card color="yellow" class="pa-3">
-                                      <v-card-title>
-                                        <h1>2</h1>
-                                        <h5>Not Done</h5>
-                                      </v-card-title>
-                                    </v-card>
-                                  </v-col>
-                                  <v-col cols="4">
-                                    <v-card color="black" class="pa-3">
-                                      <v-card-title>
-                                        <h1>4</h1>
-                                        <h5>Items</h5>
-                                      </v-card-title>
-                                    </v-card>
-                                  </v-col>
-                                </v-row>
-                              </v-col>
-                              <v-col cols="2" class="text-center ml-15 rounded">
-                                <v-card color="secondary" class="pa-3">
-                                  <v-card-title>
-                                    <h5>Incomplete</h5>
-                                  </v-card-title>
-                                </v-card>
+                              <v-col>
+                                <v-card-actions>
+                                  <v-spacer></v-spacer>
+                                  <v-btn color="green" variant="flat" @click="dialog = false">
+                                    Close Dialog
+                                  </v-btn>
+                                </v-card-actions>
                               </v-col>
                             </v-row>
-                            <v-row>
-                              <template>
-                                <v-table height="300px">
-                                  <thead>
-                                    <tr>
-                                      <th class="text-left">
-                                        Name
-                                      </th>
-                                      <th class="text-left">
-                                        Calories
-                                      </th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr v-for="item in desserts" :key="item.name">
-                                      <td>{{ item.name }}</td>
-                                      <td>{{ item.calories }}</td>
-                                    </tr>
-                                  </tbody>
-                                </v-table>
-                              </template>
-                            </v-row>
-                          </v-card-text>
-                          <v-card-actions>
-                            <v-btn color="primary" block @click="dialog = false">Close Dialog</v-btn>
-                          </v-card-actions>
-                        </v-card>
-                      </v-dialog>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-divider></v-divider>
-                <v-row>
-                  <v-col class="text-left mt-4" lg="6">
-                    <h3>Table No.2</h3>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-            <v-col v-else class="text-center">
-              <div class="card-body cart">
-                <div class="col-sm-12 empty-cart-cls text-center">
-                  <img src="/src/assets/cart.png" width="100" height="100" class="img-fluid mb-4 mr-3">
-                  <!-- <v-icon class="img-fluid mb-4 mr-3">mdi-cart-remove</v-icon> -->
-                  <h3><strong>Your Sales Order Is Empty</strong></h3>
+                            <v-divider></v-divider>
+                            <v-card-text>
+                              <v-row>
+                                <v-col cols="2" class="text-center ml-15 rounded">
+                                  <v-card color="secondary" class="pa-6" height="100%">
+                                    <v-card-title>
+                                      <h3>Order No. {{ header.no_order }}</h3>
+                                    </v-card-title>
+                                  </v-card>
+                                </v-col>
+                                <v-col cols="7" class="text-center">
+                                  <v-row class="pl-15">
+                                    <v-col cols="4">
+                                      <v-card color="green" class="pa-3">
+                                        <v-card-title>
+                                          <h1>{{ this.detail.reduce((acc, item) =>
+                                            acc + item.on_done, 0
+                                          ) }}</h1>
+                                          <h5>Done</h5>
+                                        </v-card-title>
+                                      </v-card>
+                                    </v-col>
+                                    <v-col cols="4">
+                                      <v-card color="yellow" class="pa-3">
+                                        <v-card-title>
+                                          <h1>{{ this.detail.reduce((acc, item) =>
+                                            acc + item.qty, 0
+                                          ) - this.detail.reduce((acc, item) =>
+                                            acc + item.on_done, 0
+                                          ) }}</h1>
+                                          <h5>Not Done</h5>
+                                        </v-card-title>
+                                      </v-card>
+                                    </v-col>
+                                    <v-col cols="4">
+                                      <v-card color="black" class="pa-3">
+                                        <v-card-title>
+                                          <h1>{{ detail.length }}</h1>
+                                          <h5>Items</h5>
+                                        </v-card-title>
+                                      </v-card>
+                                    </v-col>
+                                  </v-row>
+                                </v-col>
+
+                              </v-row>
+                              <v-row>
+                                <v-col cols="12">
+                                  <v-table>
+                                    <thead color="primary">
+                                      <tr>
+                                        <th>#</th>
+                                        <th>Item Name</th>
+                                        <th>Order</th>
+                                        <th class="text-center">Qty Out</th>
+                                        <th class="text-center">Balance</th>
+                                        <th class="text-center">Status</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr v-for="(items, index) in detail" :key="index">
+                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ items.item.name }}</td>
+                                        <td>{{ items.qty }}</td>
+                                        <td>
+                                          <div class="d-flex align-left flex-column pa-6">
+                                            <v-btn-toggle>
+                                              <v-btn type="button" icon="mdi-minus" @click="reduceQuantity(index)"
+                                                :disabled="items.qty == items.on_done"></v-btn>
+                                              <v-text-field type="number" v-model="items.qty_out" readonly></v-text-field>
+                                              <v-btn type="button" icon="mdi-plus" :disabled="items.qty == items.on_done"
+                                                @click="addQuantity(index)"></v-btn>
+                                            </v-btn-toggle>
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <div class="d-flex align-left flex-column pa-6">
+                                            <v-btn-toggle>
+                                              <v-text-field type="number" v-model="items.on_process"
+                                                readonly></v-text-field>
+                                            </v-btn-toggle>
+                                          </div>
+                                        </td>
+                                        <td class="text-center"><v-chip color="green" class="ma-2"
+                                            v-if="items.status == 'DONE'">
+                                            {{ items.status }}
+                                          </v-chip>
+                                          <v-chip color="black" class="ma-2" text-color="black" v-else>
+                                            {{ items.status }}
+                                          </v-chip>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </v-table>
+                                </v-col>
+                              </v-row>
+                              <v-divider></v-divider>
+                              <br>
+                              <v-btn color="primary" variant="flat" class="float-end" @click.stop="update">Update Sales
+                                Order</v-btn>
+                            </v-card-text>
+                          </v-card>
+                        </v-dialog>
+                      </div>
+                    </v-col>
+                  </v-row>
+                  <v-divider></v-divider>
+                  <v-row>
+                    <v-col class="text-center mt-4" lg="12">
+                      <h3>Table No. {{ row.table.no_table }}</h3>
+                    </v-col>
+                  </v-row>
+                </v-card>
+              </v-col>
+              <v-col v-else class="text-center">
+                <div class="card-body cart">
+                  <div class="col-sm-12 empty-cart-cls text-center">
+                    <img src="/src/assets/cart.png" width="100" height="100" class="img-fluid mb-4 mr-3">
+                    <h3><strong>Your Sales Order Is Empty</strong></h3>
+                  </div>
                 </div>
-              </div>
-            </v-col>
-          </v-row>
+              </v-col>
+            </v-row>
+          </v-form>
           <br>
           <v-divider></v-divider>
           <br>
@@ -132,155 +173,171 @@
               <h3><strong>Take Away</strong></h3>
             </v-card-title>
           </v-row>
-          <v-row class="mt-3">
-            <v-col v-for="(row) in take_away" cols="2" v-if="take_away != ''">
-              <v-card height="100%" color="yellow" class="pa-3">
-                <v-row>
-                  <v-col class="text-center mt-4" lg="5">
-                    <h4>Order No</h4>
-                    <v-card-text style="font-size:3em">
-                      {{ row.no_order }}
-                    </v-card-text>
-                  </v-col>
-                  <v-col class="text-right mt-4" lg="4">
-                    <h5>Tab For Detail</h5>
-                  </v-col>
-                  <v-col class="text-left mt-3" lg="3">
-                    <div class="text-center">
-                      <v-dialog v-model="dialog" width="auto">
-                        <template v-slot:activator="{ props }">
-                          <v-btn color="primary" v-bind="props" icon="mdi-gesture-tap">
-                          </v-btn>
-                        </template>
-                        <v-card width="100%">
-                          <v-card-title class="text-h5 text-center">
-                            Summary
-                          </v-card-title>
-                          <v-divider></v-divider>
-                          <v-card-text>
+          <v-form ref="form_data">
+            <v-row class="mt-3">
+              <v-col v-for="(row) in take_away" cols="2" v-if="take_away != ''">
+                <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
+                  @click="getSalesOrderDetail(row.id)">
+                  <v-row class="flex mx-auto">
+                    <v-col width="100%" class="text-center" lg="12">
+                      <h3 class="mb-4">Order No</h3>
+                      <v-card-text style="font-size:4rem">
+                        {{ row.no_order }}
+                      </v-card-text>
+                    </v-col>
+                    <v-col class="text-right mt-4" lg="4">
+                    </v-col>
+                    <v-col class="text-left mt-3" lg="3">
+                      <div class="text-center">
+                        <v-dialog v-model="dialog" width="60%">
+                          <v-card width="100%">
                             <v-row>
-                              <v-col cols="2">
-                                <h4>Order No. </h4>
-                                <h4>Table No. </h4>
+                              <v-col class="text-right">
+                                <v-card-title class="text-h5">
+                                  Summary
+                                </v-card-title>
                               </v-col>
-                              <v-col cols="7" class="text-center">
-                                <v-row class="pl-15">
-                                  <v-col cols="4">
-                                    <v-card color="green" class="pa-3">
-                                      <v-card-title>
-                                        <h1>2</h1>
-                                        <h5>Done</h5>
-                                      </v-card-title>
-                                    </v-card>
-                                  </v-col>
-                                  <v-col cols="4">
-                                    <v-card color="yellow" class="pa-3">
-                                      <v-card-title>
-                                        <h1>2</h1>
-                                        <h5>Not Done</h5>
-                                      </v-card-title>
-                                    </v-card>
-                                  </v-col>
-                                  <v-col cols="4">
-                                    <v-card color="black" class="pa-3">
-                                      <v-card-title>
-                                        <h1>4</h1>
-                                        <h5>Items</h5>
-                                      </v-card-title>
-                                    </v-card>
-                                  </v-col>
-                                </v-row>
-                              </v-col>
-                              <v-col cols="2" class="text-center ml-15 rounded">
-                                <v-card color="secondary" class="pa-3">
-                                  <v-card-title>
-                                    <h5>Incomplete</h5>
-                                  </v-card-title>
-                                </v-card>
+                              <v-col>
+                                <v-card-actions>
+                                  <v-spacer></v-spacer>
+                                  <v-btn color="green" variant="flat" @click="dialog = false">
+                                    Close Dialog
+                                  </v-btn>
+                                </v-card-actions>
                               </v-col>
                             </v-row>
-                            <v-row>
-                              <v-col cols="12">
-                                <v-table>
-                                  <thead color="primary">
-                                    <tr>
-                                      <th>#</th>
-                                      <th width="250">Item Name</th>
-                                      <th>Order</th>
-                                      <th>
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Qty
-                                        Out</th>
-                                      <th>Order</th>
+                            <v-divider></v-divider>
+                            <v-card-text>
+                              <v-row>
+                                <v-col cols="2" class="text-center ml-15 rounded">
+                                  <v-card color="secondary" class="pa-6" height="100%">
+                                    <v-card-title>
+                                      <h3>Order No. {{ header.no_order }}</h3>
+                                    </v-card-title>
+                                  </v-card>
+                                </v-col>
+                                <v-col cols="7" class="text-center">
+                                  <v-row class="pl-15">
+                                    <v-col cols="4">
+                                      <v-card color="green" class="pa-3">
+                                        <v-card-title>
+                                          <h1>{{ this.detail.reduce((acc, item) =>
+                                            acc + item.on_done, 0
+                                          ) }}</h1>
+                                          <h5>Done</h5>
+                                        </v-card-title>
+                                      </v-card>
+                                    </v-col>
+                                    <v-col cols="4">
+                                      <v-card color="yellow" class="pa-3">
+                                        <v-card-title>
+                                          <h1>{{ this.detail.reduce((acc, item) =>
+                                            acc + item.qty, 0
+                                          ) - this.detail.reduce((acc, item) =>
+                                            acc + item.on_done, 0
+                                          ) }}</h1>
+                                          <h5>Not Done</h5>
+                                        </v-card-title>
+                                      </v-card>
+                                    </v-col>
+                                    <v-col cols="4">
+                                      <v-card color="black" class="pa-3">
+                                        <v-card-title>
+                                          <h1>{{ detail.length }}</h1>
+                                          <h5>Items</h5>
+                                        </v-card-title>
+                                      </v-card>
+                                    </v-col>
+                                  </v-row>
+                                </v-col>
 
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr>
-                                      <td>1</td>
-                                      <td>Topoki Jepang</td>
-                                      <td>3</td>
-                                      <td width="500">
-                                        <br>
-                                        <v-row>
-                                          <v-col cols="2">
-                                            <v-btn type="button" color="primary"><strong>-</strong></v-btn>
-                                          </v-col>
-                                          <v-col cols="3">
-                                            <v-text-field type="number" min="1" outlined></v-text-field>
-                                          </v-col>
-                                          <v-col cols="4" class="float-end">
-                                            <v-btn type="button" color="primary"><strong>+</strong></v-btn>
-                                          </v-col>
-                                        </v-row>
-                                      </td>
-                                      <td>3</td>
-                                    </tr>
-                                  </tbody>
-                                </v-table>
-                              </v-col>
-                            </v-row>
-                          </v-card-text>
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                              color="green-darken-1"
-                              variant="text"
-                              @click="dialog = false"
-                            >
-                              Close Dialog
-                            </v-btn>
-                          </v-card-actions>
-                        </v-card>
-                        <br>
-                      </v-dialog>
-                    </div>
-                  </v-col>
-                </v-row>
-                <v-divider></v-divider>
-                <v-row>
-                  <v-col class="text-left mt-4" lg="6">
-                    <h3>Table No.2</h3>
-                  </v-col>
-                </v-row>
-              </v-card>
-            </v-col>
-            <v-col v-else class="text-center">
-              <div class="card-body cart">
-                <div class="col-sm-12 empty-cart-cls text-center">
-                  <img src="/src/assets/cart.png" width="100" height="100" class="img-fluid mb-4 mr-3">
-                  <!-- <v-icon class="img-fluid mb-4 mr-3">mdi-cart-remove</v-icon> -->
-                  <h3><strong>Your Sales Order Is Empty</strong></h3>
+                              </v-row>
+                              <v-row>
+                                <v-col cols="12">
+                                  <v-table>
+                                    <thead theme="dark">
+                                      <tr>
+                                        <th>#</th>
+                                        <th>Item Name</th>
+                                        <th>Order</th>
+                                        <th class="text-center">Qty Out</th>
+                                        <th class="text-center">Balance</th>
+                                        <th class="text-center">Status</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr v-for="(items, index) in detail" :key="index">
+                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ items.item.name }}</td>
+                                        <td>{{ items.qty }}</td>
+                                        <td>
+                                          <div class="d-flex align-left flex-column pa-6" color="primary">
+                                            <v-btn-toggle>
+                                              <v-btn type="button" variant="flat" icon="mdi-minus"
+                                                @click="reduceQuantity(index)"
+                                                :disabled="items.qty == items.on_done"></v-btn>
+                                              <v-text-field type="number" v-model="items.qty_out" readonly></v-text-field>
+                                              <v-btn type="button" icon="mdi-plus" :disabled="items.qty == items.on_done"
+                                                @click="addQuantity(index)"></v-btn>
+                                            </v-btn-toggle>
+                                          </div>
+                                        </td>
+                                        <td>
+                                          <div class="d-flex align-left flex-column pa-6">
+                                            <v-btn-toggle>
+                                              <v-text-field type="number" v-model="items.on_process"
+                                                readonly></v-text-field>
+                                            </v-btn-toggle>
+                                          </div>
+                                        </td>
+                                        <td class="text-center"><v-chip color="green" class="ma-2"
+                                            v-if="items.status == 'DONE'">
+                                            {{ items.status }}
+                                          </v-chip>
+                                          <v-chip color="black" class="ma-2" text-color="black" v-else>
+                                            {{ items.status }}
+                                          </v-chip>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </v-table>
+                                </v-col>
+                              </v-row>
+                              <v-divider></v-divider>
+                              <br>
+                              <v-btn color="primary" variant="flat" class="float-end" @click.stop="update">Update Sales
+                                Order</v-btn>
+                            </v-card-text>
+                          </v-card>
+                        </v-dialog>
+                      </div>
+                    </v-col>
+                  </v-row>
+                  <v-divider></v-divider>
+                  <v-row>
+                    <v-col class="text-center mt-4" lg="12">
+                      <h3>Table No. {{ row.table.no_table }}</h3>
+                    </v-col>
+                  </v-row>
+                </v-card>
+              </v-col>
+              <v-col v-else class="text-center">
+                <div class="card-body cart">
+                  <div class="col-sm-12 empty-cart-cls text-center">
+                    <img src="/src/assets/cart.png" width="100" height="100" class="img-fluid mb-4 mr-3">
+                    <h3><strong>Your Sales Order Is Empty</strong></h3>
+                  </div>
                 </div>
-              </div>
-            </v-col>
-          </v-row>
+              </v-col>
+            </v-row>
+          </v-form>
         </v-responsive>
       </v-container>
     </v-main>
   </v-app>
 </template>
 <script>
-import axios from 'axios'
+import $axios from '@/plugins/api.js'
 export default {
   name: 'All',
   components: {
@@ -289,21 +346,65 @@ export default {
     return {
       dialog: false,
       dine_in: [],
-      total: 0,
       take_away: [],
+      header: [],
+      detail: [],
+      sales_orders: [],
+      on_process: 0,
+      form_data: [],
+
     }
   },
   methods: {
+    async update() {
+      await $axios.put(
+        "/checker/sales-orders/set-status-detail",
+        this.detail
+      ).then(({ data }) => {
+        this.dialog = false
+        this.getSalesOrder()
+      });
+    },
+
     async getSalesOrder() {
-      await axios.get("http://192.168.1.57:8169/checker/sales-orders", {
+      await $axios.get("/checker/sales-orders", {
       }).then(({ data }) => {
         this.dine_in = data.sales_orders.dine_in
         this.take_away = data.sales_orders.take_away
-        this.total = data.sales_orders.dine_in.length - data.sales_orders.take_away.length
+        console.log(this.take_away)
       });
     },
-  },
 
+    async getSalesOrderDetail(id) {
+      this.dialog = true;
+      await $axios.get("/checker/sales-orders/" + id, {
+      }).then(({ data }) => {
+        this.sales_orders = data.sales_orders.details;
+        this.header = data.sales_orders
+        this.detail = data.sales_orders.details
+        this.detail.map((item) => {
+          Object.assign(item, { qty_out: item.on_done, on_process: item.qty - item.on_done })
+          item.qty_out = item.on_done
+        })
+      });
+    },
+
+    addQuantity(index) {
+      if (this.detail[index].qty_out >= this.detail[index].qty) {
+        return
+      }
+      this.detail[index].qty_out += 1
+      this.detail[index].on_process -= 1
+    },
+
+    reduceQuantity(index) {
+      if (this.detail[index].qty_out <= 0) {
+        return
+      }
+      this.detail[index].qty_out -= 1
+      this.detail[index].on_process += 1
+    },
+  },
   created() {
     this.getSalesOrder();
   }

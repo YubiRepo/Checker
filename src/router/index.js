@@ -1,28 +1,65 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import Login from '../views/auth/Login.vue'
+import store from '../store'
+const routes = [
+  {
+    path: '/',
+    redirect: '/login'
+  },
+
+  {
+    path: '/login',
+    name: 'login',
+    meta: {
+      title: 'Login',
+      icon: 'mdi-account',
+      visible: true,
+    },
+    component: () => import('../views/auth/Login.vue')
+  },
+
+  {
+    path: '/',
+    name: 'home',
+    meta: {
+      title: 'home',
+    },
+
+    children: [
+      {
+        path: '/home',
+        name: 'home',
+        meta: {
+          title: 'Home',
+          icon: 'mdi-view-dashboard',
+          visible: true,
+        },
+        component: () => import('@/views/HomeView.vue'),
+      },
+    ],
+  },
+
+]
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: HomeView,
-    },
+  history: createWebHistory(),
+  routes
+})
 
-    {
-      path: '/login',
-      name: 'login',
-      component: Login,
-    },
-
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
+router.beforeEach((to, from, next) => {
+  store.commit('CLEAR_ERRORS')
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    let auth = store.getters.isAuth
+    if (!auth) {
+      next({ name: 'login' })
+    } else {
+      next()
     }
-  ]
+  } else {
+    next()
+  }
 })
 
 export default router
+
+
+
