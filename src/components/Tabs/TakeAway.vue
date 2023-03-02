@@ -11,7 +11,7 @@
             <v-row class="mt-3">
               <v-col v-for="(row) in take_away" cols="2" v-if="take_away != ''">
                 <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
-                  @click="getSalesOrderDetail(row.id, row.table.no_table)">
+                  @click="getSalesOrderDetail(row.id, row.table?.no_table)">
                   <v-row class="flex mx-auto">
                     <v-col width="100%" class="text-center" lg="12">
                       <h3 class="mb-4">Order No</h3>
@@ -90,14 +90,14 @@
                               <v-row>
                                 <v-col cols="12">
                                   <v-table>
-                                    <thead color="primary">
+                                    <thead style="background-color: green;">
                                       <tr>
-                                        <th>#</th>
-                                        <th>Item Name</th>
-                                        <th>Order</th>
-                                        <th class="text-center">Qty Out</th>
-                                        <th class="text-center">Balance</th>
-                                        <th class="text-center">Status</th>
+                                        <th style="color:white">#</th>
+                                        <th style="color:white">Item Name</th>
+                                        <th style="color:white">Order</th>
+                                        <th style="color:white" class="text-center">Qty Out</th>
+                                        <th style="color:white" class="text-center">Balance</th>
+                                        <th style="color:white" class="text-center">Status</th>
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -150,7 +150,7 @@
                   <v-divider></v-divider>
                   <v-row>
                     <v-col class="text-center mt-4" lg="12">
-                      <h3>Table No. {{ row.table.no_table }}</h3>
+                      <h3>Table No. {{ row.table?.no_table }}</h3>
                     </v-col>
                   </v-row>
                 </v-card>
@@ -176,6 +176,7 @@ export default {
   name: 'TakeAway',
   components: {
   },
+
   data() {
     return {
       dialog: false,

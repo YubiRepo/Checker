@@ -85,14 +85,14 @@
                             <v-row>
                               <v-col cols="12">
                                 <v-table>
-                                  <thead color="primary">
+                                  <thead style="background-color: green;">
                                     <tr>
-                                      <th>#</th>
-                                      <th>Item Name</th>
-                                      <th>Order</th>
-                                      <th class="text-center">Qty Out</th>
-                                      <th class="text-center">Balance</th>
-                                      <th class="text-center">Status</th>
+                                      <th style="color:white">#</th>
+                                      <th style="color:white">Item Name</th>
+                                      <th style="color:white">Order</th>
+                                      <th style="color:white" class="text-center">Qty Out</th>
+                                      <th style="color:white" class="text-center">Balance</th>
+                                      <th style="color:white" class="text-center">Status</th>
                                     </tr>
                                   </thead>
                                   <tbody>

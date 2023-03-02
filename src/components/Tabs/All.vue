@@ -86,12 +86,11 @@
                                     </v-col>
                                   </v-row>
                                 </v-col>
-
                               </v-row>
                               <v-row>
                                 <v-col cols="12">
                                   <v-table>
-                                    <thead color="primary">
+                                    <thead style="background-color: green;">
                                       <tr>
                                         <th>#</th>
                                         <th>Item Name</th>
@@ -151,7 +150,7 @@
                   <v-divider></v-divider>
                   <v-row>
                     <v-col class="text-center mt-4" lg="12">
-                      <h3>Table No. {{ row.table.no_table }}</h3>
+                      <h3>Table No. {{ row.table?.no_table }}</h3>
                     </v-col>
                   </v-row>
                 </v-card>
@@ -178,7 +177,7 @@
             <v-row class="mt-3">
               <v-col v-for="(row) in take_away" cols="2" v-if="take_away != ''">
                 <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
-                  @click="getSalesOrderDetail(row.id, row.table.no_table)">
+                  @click="getSalesOrderDetail(row.id, row.table?.no_table)">
                   <v-row class="flex mx-auto">
                     <v-col width="100%" class="text-center" lg="12">
                       <h3 class="mb-4">Order No</h3>
@@ -257,9 +256,9 @@
                               <v-row>
                                 <v-col cols="12">
                                   <v-table>
-                                    <thead theme="dark">
+                                    <thead style="background-color: green;">
                                       <tr>
-                                        <th>#</th>
+                                        <th style="color:white">#</th>
                                         <th>Item Name</th>
                                         <th>Order</th>
                                         <th class="text-center">Qty Out</th>
@@ -318,7 +317,7 @@
                   <v-divider></v-divider>
                   <v-row>
                     <v-col class="text-center mt-4" lg="12">
-                      <h3>Table No. {{ row.table.no_table }}</h3>
+                      <h3>Table No. {{ row.table?.no_table }}</h3>
                     </v-col>
                   </v-row>
                 </v-card>
@@ -374,7 +373,6 @@ export default {
       }).then(({ data }) => {
         this.dine_in = data.sales_orders.dine_in
         this.take_away = data.sales_orders.take_away
-        console.log(this.take_away)
       });
     },
 
