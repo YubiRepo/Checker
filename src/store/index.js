@@ -10,6 +10,7 @@ export default createStore({
         token: localStorage.getItem("token"),
         errors: [],
     },
+
     getters: {
         isAuth: state => {
             return state.token != "null" && state.token != null

@@ -43,9 +43,9 @@
                             <v-divider></v-divider>
                             <v-card-text>
                               <v-row>
-                                <v-col cols="2" class="text-center ml-15 rounded">
+                                <v-col cols="2" class="text-left ml-15 rounded">
                                   <v-card class="pa-3" height="100%" elevation="1">
-                                    <v-card-title>
+                                    <v-card-title style="overflow: auto;">
                                       <h5>Order No. {{ header.no_order }}</h5>
                                       <h5>Table No. {{ no_table }}</h5>
                                     </v-card-title>
@@ -55,7 +55,7 @@
                                   <v-row class="pl-15">
                                     <v-col cols="4">
                                       <v-card color="green" class="pa-3">
-                                        <v-card-title>
+                                        <v-card-title style="overflow: auto;">
                                           <h1>{{ this.detail.reduce((acc, item) =>
                                             acc + item.on_done, 0
                                           ) }}</h1>
@@ -65,7 +65,7 @@
                                     </v-col>
                                     <v-col cols="4">
                                       <v-card color="yellow" class="pa-3">
-                                        <v-card-title>
+                                        <v-card-title style="overflow: auto;">
                                           <h1>{{ this.detail.reduce((acc, item) =>
                                             acc + item.qty, 0
                                           ) - this.detail.reduce((acc, item) =>
@@ -77,7 +77,7 @@
                                     </v-col>
                                     <v-col cols="4">
                                       <v-card color="black" class="pa-3">
-                                        <v-card-title>
+                                        <v-card-title style="overflow: auto;">
                                           <h1>{{ detail.length }}</h1>
                                           <h5>Items</h5>
                                         </v-card-title>
@@ -85,7 +85,6 @@
                                     </v-col>
                                   </v-row>
                                 </v-col>
-
                               </v-row>
                               <v-row>
                                 <v-col cols="12">
@@ -189,7 +188,6 @@ export default {
       form_valid: false,
       form_data: [],
       no_table: '',
-
     }
   },
   methods: {
