@@ -46,16 +46,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  store.commit('CLEAR_ERRORS')
+  document.title = to.meta.title;
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    let auth = store.getters.isAuth
-    if (!auth) {
-      next({ name: 'login' })
-    } else {
-      next()
+    if (store.getters["auth/Authenticated"]) {
+      next();
+      return;
     }
+    next("/login");
   } else {
-    next()
+    next();
   }
 })
 

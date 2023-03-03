@@ -1,21 +1,29 @@
 <template>
-  <v-app id="inspire">
+  <main-layout>
     <v-main>
       <v-container>
         <v-responsive>
           <v-row class="mt-3">
-            <v-col v-for="(row) in dine_in" cols="2" v-if="dine_in != ''">
-              <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
-                @click="getSalesOrderDetail(row.id, row.table.no_table)">
+            <v-col
+              v-for="row in SalesOrder.dine_in"
+              cols="2"
+              v-if="SalesOrder.dine_in != ''"
+              :key="row.id"
+            >
+              <v-card
+                height="100%"
+                :color="row.status == 'DONE' ? 'green' : 'yellow'"
+                class="pa-3"
+                @click="getSalesOrderDetail(row.id, row.table.no_table)"
+              >
                 <v-row class="flex mx-auto">
                   <v-col width="100%" class="text-center" lg="12">
                     <h3 class="mb-4">Order No</h3>
-                    <v-card-text style="font-size:4rem">
+                    <v-card-text style="font-size: 4rem">
                       {{ row.no_order }}
                     </v-card-text>
                   </v-col>
-                  <v-col class="text-right mt-4" lg="4">
-                  </v-col>
+                  <v-col class="text-right mt-4" lg="4"> </v-col>
                   <v-col class="text-left mt-3" lg="3">
                     <div class="text-center">
                       <v-dialog v-model="dialog" width="60%">
@@ -29,7 +37,11 @@
                             <v-col>
                               <v-card-actions>
                                 <v-spacer></v-spacer>
-                                <v-btn color="green" variant="flat" @click="dialog = false">
+                                <v-btn
+                                  color="green"
+                                  variant="flat"
+                                  @click="dialog = false"
+                                >
                                   Close Dialog
                                 </v-btn>
                               </v-card-actions>
@@ -39,8 +51,12 @@
                           <v-card-text>
                             <v-row>
                               <v-col cols="2" class="text-center ml-15 rounded">
-                                <v-card class="pa-3" height="100%" elevation="1">
-                                  <v-card-title style="overflow: auto;">
+                                <v-card
+                                  class="pa-3"
+                                  height="100%"
+                                  elevation="1"
+                                >
+                                  <v-card-title style="overflow: auto">
                                     <h5>Order No. {{ header.no_order }}</h5>
                                     <h5>Table No. {{ no_table }}</h5>
                                   </v-card-title>
@@ -50,29 +66,41 @@
                                 <v-row class="pl-15">
                                   <v-col cols="4">
                                     <v-card color="green" class="pa-3">
-                                      <v-card-title style="overflow: auto;">
-                                        <h1>{{ this.detail.reduce((acc, item) =>
-                                          acc + item.on_done, 0
-                                        ) }}</h1>
+                                      <v-card-title style="overflow: auto">
+                                        <h1>
+                                          {{
+                                            this.detail.reduce(
+                                              (acc, item) => acc + item.on_done,
+                                              0
+                                            )
+                                          }}
+                                        </h1>
                                         <h5>Done</h5>
                                       </v-card-title>
                                     </v-card>
                                   </v-col>
                                   <v-col cols="4">
                                     <v-card color="yellow" class="pa-3">
-                                      <v-card-title style="overflow: auto;">
-                                        <h1>{{ this.detail.reduce((acc, item) =>
-                                          acc + item.qty, 0
-                                        ) - this.detail.reduce((acc, item) =>
-                                          acc + item.on_done, 0
-                                        ) }}</h1>
+                                      <v-card-title style="overflow: auto">
+                                        <h1>
+                                          {{
+                                            this.detail.reduce(
+                                              (acc, item) => acc + item.qty,
+                                              0
+                                            ) -
+                                            this.detail.reduce(
+                                              (acc, item) => acc + item.on_done,
+                                              0
+                                            )
+                                          }}
+                                        </h1>
                                         <h5>Not Done</h5>
                                       </v-card-title>
                                     </v-card>
                                   </v-col>
                                   <v-col cols="4">
                                     <v-card color="black" class="pa-3">
-                                      <v-card-title style="overflow: auto;">
+                                      <v-card-title style="overflow: auto">
                                         <h1>{{ detail.length }}</h1>
                                         <h5>Items</h5>
                                       </v-card-title>
@@ -80,50 +108,99 @@
                                   </v-col>
                                 </v-row>
                               </v-col>
-
                             </v-row>
                             <v-row>
                               <v-col cols="12">
                                 <v-table>
-                                  <thead style="background-color: green;">
+                                  <thead style="background-color: green">
                                     <tr>
-                                      <th style="color:white">#</th>
-                                      <th style="color:white">Item Name</th>
-                                      <th style="color:white">Order</th>
-                                      <th style="color:white" class="text-center">Qty Out</th>
-                                      <th style="color:white" class="text-center">Balance</th>
-                                      <th style="color:white" class="text-center">Status</th>
+                                      <th style="color: white">#</th>
+                                      <th style="color: white">Item Name</th>
+                                      <th style="color: white">Order</th>
+                                      <th
+                                        style="color: white"
+                                        class="text-center"
+                                      >
+                                        Qty Out
+                                      </th>
+                                      <th
+                                        style="color: white"
+                                        class="text-center"
+                                      >
+                                        Balance
+                                      </th>
+                                      <th
+                                        style="color: white"
+                                        class="text-center"
+                                      >
+                                        Status
+                                      </th>
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    <tr v-for="(items, index) in detail" :key="index">
+                                    <tr
+                                      v-for="(items, index) in detail"
+                                      :key="index"
+                                    >
                                       <td>{{ index + 1 }}</td>
                                       <td>{{ items.item.name }}</td>
                                       <td>{{ items.qty }}</td>
                                       <td>
-                                        <div class="d-flex align-left flex-column pa-6">
+                                        <div
+                                          class="d-flex align-left flex-column pa-6"
+                                        >
                                           <v-btn-toggle>
-                                            <v-btn type="button" icon="mdi-minus" @click="reduceQuantity(index)"
-                                              :disabled="items.qty == items.on_done"></v-btn>
-                                            <v-text-field type="number" v-model="items.qty_out" readonly></v-text-field>
-                                            <v-btn type="button" icon="mdi-plus" :disabled="items.qty == items.on_done"
-                                              @click="addQuantity(index)"></v-btn>
+                                            <v-btn
+                                              type="button"
+                                              icon="mdi-minus"
+                                              @click="reduceQuantity(index)"
+                                              :disabled="
+                                                items.qty == items.on_done
+                                              "
+                                            ></v-btn>
+                                            <v-text-field
+                                              type="number"
+                                              v-model="items.qty_out"
+                                              readonly
+                                            ></v-text-field>
+                                            <v-btn
+                                              type="button"
+                                              icon="mdi-plus"
+                                              :disabled="
+                                                items.qty == items.on_done
+                                              "
+                                              @click="addQuantity(index)"
+                                            ></v-btn>
                                           </v-btn-toggle>
                                         </div>
                                       </td>
                                       <td>
-                                        <div class="d-flex align-left flex-column pa-6">
+                                        <div
+                                          class="d-flex align-left flex-column pa-6"
+                                        >
                                           <v-btn-toggle>
-                                            <v-text-field type="number" v-model="items.on_process"
-                                              readonly></v-text-field>
+                                            <v-text-field
+                                              type="number"
+                                              v-model="items.on_process"
+                                              readonly
+                                            ></v-text-field>
                                           </v-btn-toggle>
                                         </div>
                                       </td>
-                                      <td class="text-center"><v-chip color="green" class="ma-2"
-                                          v-if="items.status == 'DONE'">
+                                      <td class="text-center">
+                                        <v-chip
+                                          color="green"
+                                          class="ma-2"
+                                          v-if="items.status == 'DONE'"
+                                        >
                                           {{ items.status }}
                                         </v-chip>
-                                        <v-chip color="black" class="ma-2" text-color="black" v-else>
+                                        <v-chip
+                                          color="black"
+                                          class="ma-2"
+                                          text-color="black"
+                                          v-else
+                                        >
                                           {{ items.status }}
                                         </v-chip>
                                       </td>
@@ -133,9 +210,14 @@
                               </v-col>
                             </v-row>
                             <v-divider></v-divider>
-                            <br>
-                            <v-btn color="primary" variant="flat" class="float-end" @click.stop="update">Update Sales
-                              Order</v-btn>
+                            <br />
+                            <v-btn
+                              color="primary"
+                              variant="flat"
+                              class="float-end"
+                              @click.stop="update"
+                              >Update Sales Order</v-btn
+                            >
                           </v-card-text>
                         </v-card>
                       </v-dialog>
@@ -153,8 +235,12 @@
             <v-col v-else class="text-center">
               <div class="card-body cart">
                 <div class="col-sm-12 empty-cart-cls text-center">
-                  <img src="/src/assets/cart.png" width="100" height="100" class="img-fluid mb-4 mr-3">
-                  <!-- <v-icon class="img-fluid mb-4 mr-3">mdi-cart-remove</v-icon> -->
+                  <img
+                    src="/src/assets/cart.png"
+                    width="100"
+                    height="100"
+                    class="img-fluid mb-4 mr-3"
+                  />
                   <h3><strong>Your Sales Order Is Empty</strong></h3>
                 </div>
               </div>
@@ -163,78 +249,72 @@
         </v-responsive>
       </v-container>
     </v-main>
-  </v-app>
+  </main-layout>
 </template>
 <script>
-import $axios from '@/plugins/api.js'
+import $axios from "@/plugins/api.js";
+import { mapGetters } from "vuex";
+import MainLayout from "@/layouts/MainLayout.vue";
 export default {
-  name: 'DineIn',
-  components: {
-  },
+  name: "DineIn",
+  components: {},
   data() {
     return {
       dialog: false,
-      dine_in: [],
       header: [],
       detail: [],
-      sales_orders: [],
       on_process: 0,
-      no_table: '',
-
-    }
+      no_table: "",
+    };
   },
   methods: {
     async update() {
-      await $axios.put(
-        "/checker/sales-orders/set-status-detail",
-        this.detail
-      ).then(({ data }) => {
-        this.dialog = false
-        this.getSalesOrder()
-      });
-    },
-
-    async getSalesOrder() {
-      await $axios.get("/checker/sales-orders", {
-      }).then(({ data }) => {
-        this.dine_in = data.sales_orders.dine_in
-      });
+      await $axios
+        .put("/checker/sales-orders/set-status-detail", this.detail)
+        .then(({ data }) => {
+          this.dialog = false;
+          this.getSalesOrder();
+        });
     },
 
     async getSalesOrderDetail(id, no_table) {
       this.dialog = true;
-      await $axios.get("/checker/sales-orders/" + id, {
-      }).then(({ data }) => {
+      await $axios.get("/checker/sales-orders/" + id, {}).then(({ data }) => {
         this.sales_orders = data.sales_orders.details;
-        this.header = data.sales_orders
-        this.detail = data.sales_orders.details
-        this.no_table = no_table
+        this.header = data.sales_orders;
+        this.detail = data.sales_orders.details;
+        this.no_table = no_table;
         this.detail.map((item) => {
-          Object.assign(item, { qty_out: item.on_done, on_process: item.qty - item.on_done })
-          item.qty_out = item.on_done
-        })
+          Object.assign(item, {
+            qty_out: item.on_done,
+            on_process: item.qty - item.on_done,
+          });
+          item.qty_out = item.on_done;
+        });
       });
     },
 
     addQuantity(index) {
       if (this.detail[index].qty_out >= this.detail[index].qty) {
-        return
+        return;
       }
-      this.detail[index].qty_out += 1
-      this.detail[index].on_process -= 1
+      this.detail[index].qty_out += 1;
+      this.detail[index].on_process -= 1;
     },
 
     reduceQuantity(index) {
       if (this.detail[index].qty_out <= 0) {
-        return
+        return;
       }
-      this.detail[index].qty_out -= 1
-      this.detail[index].on_process += 1
+      this.detail[index].qty_out -= 1;
+      this.detail[index].on_process += 1;
     },
   },
-  created() {
-    this.getSalesOrder();
-  }
-
-}
+  computed: {
+    ...mapGetters("sales_order", ["SalesOrder"]),
+  },
+  components: {
+    MainLayout,
+  },
+};
 </script>
