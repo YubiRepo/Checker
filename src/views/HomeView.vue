@@ -30,16 +30,10 @@
         </v-col>
         <v-col xs="12" sm="12" md="6" lg="3" class="text-start">
           <span>
-            User Name : {{ this.$store.getters["auth/User"].name }} <br />
-            User EMail : {{ this.$store.getters["auth/User"].email }}
+            <span><strong>User Name : </strong>{{ this.$store.getters["auth/User"].name }}</span> <br>
+            <span><strong>User Email : </strong>{{ this.$store.getters["auth/User"].email }}</span>
           </span>
-          <v-btn
-            class="float-right"
-            variant="outlined"
-            color="error"
-            @click="logout"
-            >Logout</v-btn
-          >
+          <v-btn class="float-right" variant="outlined" color="error" @click="logout">Logout</v-btn>
         </v-col>
       </v-row>
     </v-app-bar>

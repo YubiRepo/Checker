@@ -1,45 +1,33 @@
 <template>
-  <v-sheet class="bg-deep-purple pa-12" rounded>
-    <v-card class="mx-auto px-6 py-8" max-width="344">
-      <v-form ref="form_login" lazy-validation>
-        <v-text-field
-          v-model="form_login.username"
-          class="mb-2"
-          clearable
-          label="Username"
-          placeholder="Enter your username"
-          :rules="rule_username"
-        ></v-text-field>
-
-        <v-text-field
-          v-model="form_login.password"
-          density="compact"
-          type="password"
-          clearable
-          label="Password"
-          placeholder="Enter your password"
-        ></v-text-field>
-
-        <br />
-        <v-btn
-          :loading="btnLoading"
-          :disabled="btnLoading"
-          @click.prevent="handleLogin"
-          block
-          color="success"
-          size="large"
-          type="submit"
-          variant="elevated"
-        >
-          Sign In
-        </v-btn>
-      </v-form>
-    </v-card>
-  </v-sheet>
+  <div class="login_container">
+    <img src="@/assets/checker.jpg" class="frame" />
+    <div class="group">
+      <v-card class="form">
+        <div class="logo mt-2 text-center">
+          <img src="@/assets/yubi.png" height="140" class="text-center" />
+        </div>
+        <div class="text-h5">👋 Welcome Back!</div>
+        <v-form ref="form_login" lazy-validation>
+          <div class="mt-4">
+            <div class="mb-2" style="font-weight: 700">Account</div>
+            <v-text-field placeholder="Username" v-model="form_login.username" :rules="rule_username"></v-text-field>
+          </div>
+          <div class="my-4">
+            <div class="mb-2 mt-6" style="font-weight: 700">Password</div>
+            <v-text-field type="password" placeholder="****" v-model="form_login.password"></v-text-field>
+          </div>
+          <div style="text-align: right">
+            <v-btn color="primary" append-icon="mdi-arrow-right" type="submit" :loading="btnLoading"
+              :disabled="btnLoading" block @click.prevent="handleLogin">Login</v-btn>
+          </div>
+        </v-form>
+      </v-card>
+    </div>
+  </div>
 </template>
-  
-  <script>
-import { mapActions, mapMutations, mapGetters, mapState } from "vuex";
+
+<script>
+import { mapActions } from "vuex";
 export default {
   name: "Login",
   data: () => ({
@@ -73,60 +61,74 @@ export default {
     ...mapActions("auth", ["submit"]),
 
     handleLogin() {
+      this.btnLoading = true;
       this.submit(this.form_login).then(() => {
         if (this.$store.getters["auth/Authenticated"]) {
           this.$router.push("/home");
+          this.btnLoading = false;
         }
       });
     },
   },
 };
 </script>
-  
-  <style scoped>
-.auth-wrapper {
-  min-block-size: calc(var(--vh, 1vh) * 100);
-}
+ 
+<style lang="scss" scoped>
+.login_container {
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s;
+  position: relative;
+  background-color: #fff;
+  overflow: hidden;
 
-.auth-footer-mask {
-  position: absolute;
-  inset-block-end: 0;
-  min-inline-size: 100%;
-}
+  .frame {
+    position: absolute;
+    left: -5%;
+    top: -5%;
+    width: 110%;
+    height: 110%;
+    filter: blur(20px);
+  }
 
-.auth-card {
-  width: 17%;
-  z-index: 1 !important;
-}
+  .group {
+    display: flex;
+    position: relative;
+    z-index: 1;
+    border-radius: 20px;
+    overflow: hidden;
 
-.auth-footer-start-tree,
-.auth-footer-end-tree {
-  position: absolute;
-  z-index: 1;
-}
+    .form {
+      width: 600px;
+      margin: 0 auto;
+      background: #fff;
+      height: 600px;
+      padding: 60px;
 
-.auth-footer-start-tree {
-  inset-block-end: 0;
-  inset-inline-start: 0;
-}
+      .title {
+        font-size: 36px;
+        font-weight: 700;
+        font-family: Roboto, sans-serif !important;
+        margin-bottom: 20px;
+      }
+    }
 
-.auth-footer-end-tree {
-  inset-block-end: 0;
-  inset-inline-end: 0;
-}
+    .desc {
+      height: 100%;
+      margin: 0 auto;
+      width: 460px;
+      background-image: linear-gradient(to bottom, #d4e5f5, #e1edf3);
+      height: 400px;
+      padding: 60px;
+      text-align: center;
 
-.auth-illustration {
-  z-index: 1;
-}
-
-.auth-logo {
-  position: absolute;
-  z-index: 1;
-  inset-block-start: 2rem;
-  inset-inline-start: 2.3rem;
-}
-
-.auth-bg {
-  background-color: rgb(var(--v-theme-surface));
+      .logo {
+        text-align: center;
+      }
+    }
+  }
 }
 </style>
