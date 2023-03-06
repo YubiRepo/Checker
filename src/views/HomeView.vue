@@ -91,6 +91,7 @@ import TabTakeAway from "../components/Tabs/TakeAway.vue";
 import $axios from "@/plugins/api.js";
 import { mapGetters, mapMutations } from "vuex";
 import MainLayout from "../layouts/MainLayout.vue";
+
 export default {
   name: "HomeView",
   components: {
@@ -130,9 +131,19 @@ export default {
 
   computed: {
     ...mapGetters("sales_order", ["SalesOrder"]),
+    ...mapGetters("auth", ["User"]),
   },
   created() {
     this.getSalesOrder();
   },
+  mounted() {
+    window.Echo.channel(`branch.${this.User.branch_id}`).listen('SalesOrderUpdated', (e) => {
+      console.log('go branch');
+      console.log(e);
+      // alert('SalesOrderUpdated')
+
+      this.getSalesOrder();
+    })
+  }
 };
 </script>
