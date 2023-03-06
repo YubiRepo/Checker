@@ -131,19 +131,18 @@ export default {
 
   computed: {
     ...mapGetters("sales_order", ["SalesOrder"]),
+    ...mapGetters("auth", ["User"]),
   },
   created() {
     this.getSalesOrder();
   },
   mounted() {
-    window.Echo.channel('public').listen('Hello', (e) => {
-      console.log('go public');
-      alert('coba websocket cuyy!', e)
-    })
-
-    window.Echo.private('test-channel.2').listen('PrivateTest', (e) => {
-      console.log('go private');
+    window.Echo.channel(`branch.${this.User.branch_id}`).listen('SalesOrderUpdated', (e) => {
+      console.log('go branch');
       console.log(e);
+      // alert('SalesOrderUpdated')
+
+      this.getSalesOrder();
     })
   }
 };
