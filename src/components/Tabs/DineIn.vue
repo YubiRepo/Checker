@@ -260,8 +260,20 @@ export default {
       this.detail[index].on_process += 1;
     },
   },
+
+  mounted() {
+    window.Echo.channel(`branch.${this.User.branch_id}`).listen('SalesOrderUpdated', (e) => {
+      console.log('go branch');
+      console.log(e);
+      // alert('SalesOrderUpdated')
+
+      this.getSalesOrder();
+    })
+  },
+
   computed: {
     ...mapGetters("sales_order", ["SalesOrder"]),
+    ...mapGetters("auth", ["User"]),
   },
   components: {
     MainLayout,
