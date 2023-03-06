@@ -48,7 +48,7 @@ const actions = {
             $axios.post('/checker/auth/login', payload)
                 .then(response => {
                     if (response.data.status == 'success') {
-                        console.log(response.data)
+                        // console.log(response.data)
                         commit('SET_TOKEN', response.data.token)
                         commit('SET_USER', response.data.user)
                     } else {

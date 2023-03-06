@@ -91,6 +91,7 @@ import TabTakeAway from "../components/Tabs/TakeAway.vue";
 import $axios from "@/plugins/api.js";
 import { mapGetters, mapMutations } from "vuex";
 import MainLayout from "../layouts/MainLayout.vue";
+
 export default {
   name: "HomeView",
   components: {
@@ -134,5 +135,16 @@ export default {
   created() {
     this.getSalesOrder();
   },
+  mounted() {
+    window.Echo.channel('public').listen('Hello', (e) => {
+      console.log('go public');
+      alert('coba websocket cuyy!', e)
+    })
+
+    window.Echo.private('test-channel.2').listen('PrivateTest', (e) => {
+      console.log('go private');
+      console.log(e);
+    })
+  }
 };
 </script>
