@@ -179,6 +179,15 @@
         </v-responsive>
       </v-container>
     </v-main>
+    <v-snackbar v-model="snackbar" :timeout="3000" color="success" location="top">
+      Order has been updated.
+
+      <template v-slot:actions>
+        <v-btn class="white--text" variant="text" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </main-layout>
 </template>
 <script>
@@ -195,6 +204,7 @@ export default {
       detail: [],
       on_process: 0,
       no_table: "",
+      snackbar: false,
     };
   },
   methods: {
@@ -243,7 +253,6 @@ export default {
         });
     },
 
-
     addQuantity(index) {
       if (this.detail[index].qty_out >= this.detail[index].qty) {
         return;
@@ -262,12 +271,8 @@ export default {
   },
 
   mounted() {
-    window.Echo.channel(`branch.${this.User.branch_id}`).listen('SalesOrderUpdated', (e) => {
-      console.log('go branch');
-      console.log(e);
-      // alert('SalesOrderUpdated')
-
-      this.getSalesOrder();
+    window.Echo.channel(`branch.${this.User.branch_id}`).listen('SalesOrderUpdated', () => {
+      this.snackbar = true;
     })
   },
 

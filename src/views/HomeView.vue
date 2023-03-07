@@ -81,6 +81,15 @@
         </v-responsive>
       </v-container>
     </v-main>
+    <v-snackbar v-model="snackbar" :timeout="3000" color="success" location="top">
+      Order has been updated.
+
+      <template v-slot:actions>
+        <v-btn class="white--text" variant="text" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </main-layout>
 </template>
 <script>
@@ -104,23 +113,21 @@ export default {
   data() {
     return {
       tab: null,
+      snackbar: false,
     };
   },
   methods: {
     ...mapMutations("sales_order", ["SET_SALES_ORDER"]),
     async getSalesOrder() {
-      setInterval(
-        await $axios
-          .get("/checker/sales-orders", {
-            headers: {
-              Authorization: `Bearer ${this.$store.getters["auth/Token"]}`,
-            },
-          })
-          .then(({ data }) => {
-            this.SET_SALES_ORDER(data.sales_orders);
-          }),
-        1000
-      );
+      await $axios
+        .get("/checker/sales-orders", {
+          headers: {
+            Authorization: `Bearer ${this.$store.getters["auth/Token"]}`,
+          },
+        })
+        .then(({ data }) => {
+          this.SET_SALES_ORDER(data.sales_orders);
+        })
     },
 
     logout() {
@@ -137,10 +144,11 @@ export default {
     this.getSalesOrder();
   },
   mounted() {
-    window.Echo.channel(`branch.${this.User.branch_id}`).listen('SalesOrderUpdated', (e) => {
-      console.log('go branch');
-      console.log(e);
+    window.Echo.channel(`branch.${this.User.branch_id}`).listen('SalesOrderUpdated', () => {
+      // console.log('go branch');
+      // console.log(e);
       // alert('SalesOrderUpdated')
+      this.snackbar = true;
 
       this.getSalesOrder();
     })
