@@ -28,15 +28,30 @@
         <v-col xs="12" sm="12" md="6" lg="5" class="text-center">
           <h1><strong>Order List</strong></h1>
         </v-col>
-        <v-col xs="12" sm="12" md="6" lg="3" class="text-start">
-          <span>
-            <span><strong>User Name : </strong>{{ this.$store.getters["auth/User"].name }}</span> <br>
-            <span><strong>User Email : </strong>{{ this.$store.getters["auth/User"].email }}</span>
-          </span>
-          <v-btn class="float-right" variant="outlined" color="error" @click="logout">Logout</v-btn>
+        <v-col xs="12" sm="12" md="6" lg="3" class="text-end">
+          <div class="tool_btns">
+            <v-btn variant="text" />
+            <v-btn variant="text" append-icon="mdi-chevron-down" class="mr-2">
+              <v-avatar size="x-small" class="avatarmr-2">
+                <v-img src="" alt="user"></v-img>
+              </v-avatar>
+              <h4><strong><span>USER</span></strong> </h4>
+              <v-menu activator="parent">
+                <v-list nav class="h_a_menu">
+                  <v-list-item title="Logout" prepend-icon="mdi-login" @click="logout()" />
+                </v-list>
+              </v-menu>
+            </v-btn>
+          </div>
         </v-col>
       </v-row>
     </v-app-bar>
+    <!-- <v-app-bar title="&nbsp;">
+      <v-snackbar v-model="snackbar" :timeout="3000" color="success" location="top">
+        Order has been updated
+      </v-snackbar>
+      
+    </v-app-bar> -->
     <v-main>
       <v-container>
         <v-responsive>

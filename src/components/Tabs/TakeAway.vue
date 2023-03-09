@@ -173,19 +173,6 @@
                   </v-row>
                 </v-card>
               </v-col>
-              <!-- <v-col v-else class="text-center">
-                <div class="card-body cart">
-                  <div class="col-sm-12 empty-cart-cls text-center">
-                    <img
-                      src="/src/assets/cart.png"
-                      width="100"
-                      height="100"
-                      class="img-fluid mb-4 mr-3"
-                    />
-                    <h3><strong>Your Sales Order Is Empty</strong></h3>
-                  </div>
-                </div>
-              </v-col> -->
 
               <v-snackbar v-model="snackbar" :timeout="3000" color="success" location="top">
                 Order has been updated.
@@ -201,15 +188,6 @@
         </v-responsive>
       </v-container>
     </v-main>
-    <v-snackbar v-model="snackbar" :timeout="3000" color="success" location="top">
-      Order has been updated.
-
-      <template v-slot:actions>
-        <v-btn class="white--text" variant="text" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
   </main-layout>
 </template>
 <script>
