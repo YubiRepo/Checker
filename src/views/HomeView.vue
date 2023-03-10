@@ -11,9 +11,9 @@
             </v-card-title>
           </v-card>
           <v-card-title class="text-left">
-            <h4>
+            <h5>
               <strong>Total Sales Order : {{ SalesOrder.all_count }}</strong>
-            </h4>
+            </h5>
           </v-card-title>
         </v-col>
         <v-col xs="12" sm="12" md="6" lg="2">
@@ -46,12 +46,6 @@
         </v-col>
       </v-row>
     </v-app-bar>
-    <!-- <v-app-bar title="&nbsp;">
-      <v-snackbar v-model="snackbar" :timeout="3000" color="success" location="top">
-        Order has been updated
-      </v-snackbar>
-      
-    </v-app-bar> -->
     <v-main>
       <v-container>
         <v-responsive>
@@ -96,15 +90,7 @@
         </v-responsive>
       </v-container>
     </v-main>
-    <v-snackbar v-model="snackbar" :timeout="3000" color="success" location="top">
-      Order has been updated.
 
-      <template v-slot:actions>
-        <v-btn class="white--text" variant="text" @click="snackbar = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
   </main-layout>
 </template>
 <script>
@@ -128,7 +114,6 @@ export default {
   data() {
     return {
       tab: null,
-      snackbar: false,
     };
   },
   methods: {
@@ -158,15 +143,5 @@ export default {
   created() {
     this.getSalesOrder();
   },
-  mounted() {
-    window.Echo.channel(`branch.${this.User.branch_id}`).listen('SalesOrderUpdated', () => {
-      // console.log('go branch');
-      // console.log(e);
-      // alert('SalesOrderUpdated')
-      this.snackbar = true;
-
-      this.getSalesOrder();
-    })
-  }
 };
 </script>

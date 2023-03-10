@@ -6,7 +6,8 @@ import router from './router'
 import vuetify from './plugins/vuetify';
 import Echo from "laravel-echo"
 import Pusher from 'pusher-js'
-
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 window.Pusher = Pusher
 
 window.Echo = new Echo({
@@ -32,4 +33,5 @@ app.use(createPinia())
     .use(router)
     .use(vuetify)
     .use(store)
+    .use(VueSweetalert2)
     .mount('#app')
