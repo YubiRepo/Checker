@@ -1,7 +1,6 @@
 <template>
   <main-layout>
     <v-main>
-      <v-progress-linear indeterminate color="yellow-darken-2 " :active="loading"></v-progress-linear>
       <v-container>
         <v-responsive>
           <v-row>
@@ -36,6 +35,15 @@
         </v-responsive>
       </v-container>
     </v-main>
+    <v-snackbar v-model="snackbar" :timeout="3000" color="success" location="top">
+      Order has been updated.
+
+      <template v-slot:actions>
+        <v-btn class="white--text" variant="text" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <v-dialog v-model="dialog" hide-overlay width="60%">
       <v-card width="100%">
         <v-row>
@@ -59,8 +67,8 @@
             <v-col cols="2" class="ml-15 rounded">
               <v-card class="pa-3" height="100%" elevation="1">
                 <v-card-title style="overflow: auto">
-                  <h5>Order No. {{ header.no_order }}</h5>
-                  <h5>Table No. {{ no_table }}</h5>
+                  <h4>Order No</h4>
+                  <h4>{{ header.no_order }}</h4>
                 </v-card-title>
               </v-card>
             </v-col>
@@ -145,6 +153,8 @@
                           <v-btn type="button" icon="mdi-plus" :disabled="
                             items.qty == items.on_done
                           " @click="addQuantity(index)"></v-btn>
+                          <v-btn type="button" variant="flat" style="background-color:#BBDEFB;" @click="check(index)"
+                            :disabled="items.qty == items.on_done"><v-icon>mdi-check-outline</v-icon></v-btn>
                         </v-btn-toggle>
                       </div>
                     </td>
@@ -217,7 +227,6 @@ export default {
             })
             .then(({ data }) => {
               this.SET_SALES_ORDER(data.sales_orders);
-              this.$swal('success', 'Data has been update');
               this.dialog = false;
               this.loading = false;
             });
@@ -263,6 +272,18 @@ export default {
       this.detail[index].qty_out -= 1;
       this.detail[index].on_process += 1;
     },
+
+    check(index) {
+      if (this.detail[index].qty_out > this.detail[index].qty) {
+        this.$toast.error("Qty Out can't be greater than Qty");
+        return;
+      }
+      this.detail[index].on_done = this.detail[index].qty_out;
+      this.detail[index].qty_out = this.detail[index].qty;
+      this.detail[index].on_process = 0;
+      this.detail[index].status = "DONE";
+    },
+
   },
 
   mounted() {

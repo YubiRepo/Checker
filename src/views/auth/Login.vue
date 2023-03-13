@@ -6,7 +6,7 @@
         <div class="logo mt-2 text-center">
           <img src="@/assets/yubi.png" height="140" class="text-center" />
         </div>
-        <div class="text-h5">👋 Welcome Back!</div>
+        <div class="text-h5 text-center">Checker</div>
         <v-form ref="form_login" lazy-validation>
           <div class="mt-4">
             <div class="mb-2" style="font-weight: 700">Account</div>

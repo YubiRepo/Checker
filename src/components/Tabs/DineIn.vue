@@ -1,7 +1,6 @@
 <template>
   <main-layout>
     <v-main>
-      <v-progress-linear indeterminate color="yellow-darken-2 " :active="loading"></v-progress-linear>
       <v-container>
         <v-responsive>
           <v-row class="mt-3">
@@ -134,6 +133,8 @@
                           <v-btn type="button" icon="mdi-plus" :disabled="
                             items.qty == items.on_done
                           " @click="addQuantity(index)"></v-btn>
+                          <v-btn type="button" variant="flat" style="background-color:#BBDEFB;" @click="check(index)"
+                            :disabled="items.qty == items.on_done"><v-icon>mdi-check-outline</v-icon></v-btn>
                         </v-btn-toggle>
                       </div>
                     </td>
@@ -159,7 +160,7 @@
           </v-row>
           <v-divider></v-divider>
           <br />
-          <v-btn color="primary" variant="flat" class="float-end" @click.stop="update">Update Sales
+          <v-btn :disabled="loading" color="primary" variant="flat" class="float-end" @click.stop="update">Update Sales
             Order</v-btn>
         </v-card-text>
       </v-card>
@@ -175,18 +176,17 @@ export default {
   components: {},
   data() {
     return {
-      loading: false,
       dialog: false,
       header: [],
       detail: [],
       on_process: 0,
       no_table: "",
+      snackbar: false,
     };
   },
   methods: {
     ...mapMutations("sales_order", ["SET_SALES_ORDER"]),
     async update() {
-      this.loading = true;
       await $axios
         .put("/checker/sales-orders/set-status-detail", this.detail, {
           headers: {
@@ -203,15 +203,11 @@ export default {
             })
             .then(({ data }) => {
               this.SET_SALES_ORDER(data.sales_orders);
-              this.$swal('success', 'Data has been update');
-              this.dialog = false;
-              this.loading = false;
             });
         });
     },
 
     async getSalesOrderDetail(id, no_table) {
-      this.loading = true;
       this.dialog = true;
       await $axios
         .get("/checker/sales-orders/" + id, {
@@ -248,6 +244,17 @@ export default {
       }
       this.detail[index].qty_out -= 1;
       this.detail[index].on_process += 1;
+    },
+
+    check(index) {
+      if (this.detail[index].qty_out > this.detail[index].qty) {
+        this.$toast.error("Qty Out can't be greater than Qty");
+        return;
+      }
+      this.detail[index].on_done = this.detail[index].qty_out;
+      this.detail[index].qty_out = this.detail[index].qty;
+      this.detail[index].on_process = 0;
+      this.detail[index].status = "DONE";
     },
   },
 
