@@ -1,71 +1,69 @@
 <template>
   <main-layout>
     <v-main>
-      <v-container>
-        <v-responsive>
-          <v-row>
-            <v-card-title>
-              <h3><strong>Dine In</strong></h3>
-            </v-card-title>
+      <v-responsive>
+        <v-row>
+          <v-card-title>
+            <h3><strong>Dine In</strong></h3>
+          </v-card-title>
+        </v-row>
+        <v-form ref="form_data">
+          <v-row class="mt-3">
+            <v-col v-for="row in SalesOrder.dine_in" cols="2" :key="row.id">
+              <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
+                @click="getSalesOrderDetail(row.id, row.table.no_table)">
+                <v-row class="flex mx-auto">
+                  <v-col width="100%" class="text-center" lg="12">
+                    <h3 class="mb-4">Order No</h3>
+                    <v-card-text style="font-size: 4rem;overflow: auto;">
+                      {{ row.no_order }}
+                    </v-card-text>
+                  </v-col>
+                  <v-col class="text-right mt-4" lg="4"> </v-col>
+                </v-row>
+                <v-divider></v-divider>
+                <v-row>
+                  <v-col class="text-center mt-4" lg="12">
+                    <h3>Table No. {{ row.table?.no_table }}</h3>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-col>
           </v-row>
-          <v-form ref="form_data">
-            <v-row class="mt-3">
-              <v-col v-for="row in SalesOrder.dine_in" cols="2" :key="row.id">
-                <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
-                  @click="getSalesOrderDetail(row.id, row.table.no_table)">
-                  <v-row class="flex mx-auto">
-                    <v-col width="100%" class="text-center" lg="12">
-                      <h3 class="mb-4">Order No</h3>
-                      <v-card-text style="font-size: 4rem">
-                        {{ row.no_order }}
-                      </v-card-text>
-                    </v-col>
-                    <v-col class="text-right mt-4" lg="4"> </v-col>
-                  </v-row>
-                  <v-divider></v-divider>
-                  <v-row>
-                    <v-col class="text-center mt-4" lg="12">
-                      <h3>Table No. {{ row.table?.no_table }}</h3>
-                    </v-col>
-                  </v-row>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-form>
-          <br />
-          <v-divider></v-divider>
-          <br />
-          <v-row>
-            <v-card-title>
-              <h3><strong>Take Away</strong></h3>
-            </v-card-title>
+        </v-form>
+        <br />
+        <v-divider></v-divider>
+        <br />
+        <v-row>
+          <v-card-title>
+            <h3><strong>Take Away</strong></h3>
+          </v-card-title>
+        </v-row>
+        <v-form ref="form_data">
+          <v-row class="mt-3">
+            <v-col v-for="row in SalesOrder.take_away" cols="2" :key="row.id">
+              <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
+                @click="getSalesOrderDetail(row.id, row.table?.no_table)">
+                <v-row class="flex mx-auto">
+                  <v-col width="100%" class="text-center" lg="12">
+                    <h3 class="mb-4">Order No</h3>
+                    <v-card-text style="font-size: 4rem">
+                      {{ row.no_order }}
+                    </v-card-text>
+                  </v-col>
+                  <v-col class="text-right mt-4" lg="4"> </v-col>
+                </v-row>
+                <v-divider></v-divider>
+                <v-row>
+                  <v-col class="text-left mt-4" lg="12">
+                    <h3>Customer : {{ row.customer?.name }}</h3>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-col>
           </v-row>
-          <v-form ref="form_data">
-            <v-row class="mt-3">
-              <v-col v-for="row in SalesOrder.take_away" cols="2" :key="row.id">
-                <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
-                  @click="getSalesOrderDetail(row.id, row.table?.no_table)">
-                  <v-row class="flex mx-auto">
-                    <v-col width="100%" class="text-center" lg="12">
-                      <h3 class="mb-4">Order No</h3>
-                      <v-card-text style="font-size: 4rem">
-                        {{ row.no_order }}
-                      </v-card-text>
-                    </v-col>
-                    <v-col class="text-right mt-4" lg="4"> </v-col>
-                  </v-row>
-                  <v-divider></v-divider>
-                  <v-row>
-                    <v-col class="text-left mt-4" lg="12">
-                      <h3>Customer : {{ row.customer?.name }}</h3>
-                    </v-col>
-                  </v-row>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-form>
-        </v-responsive>
-      </v-container>
+        </v-form>
+      </v-responsive>
     </v-main>
 
     <v-dialog v-model="dialog" v-if="dialog" hide-overlay width="60%">
@@ -167,7 +165,8 @@
                       <div class="d-flex align-left flex-column pa-6">
                         <v-btn-toggle>
                           <v-btn type="button" icon="mdi-minus" @click="reduceQuantity(index)"></v-btn>
-                          <v-text-field type="number" v-model="items.qty_out" readonly></v-text-field>
+                          <v-text-field type="number" v-model="items.qty_out"
+                            @change="calculateQty(index)"></v-text-field>
                           <v-btn type="button" icon="mdi-plus" :disabled="
                             items.qty == items.on_done
                           " @click="addQuantity(index)"></v-btn>
@@ -292,13 +291,22 @@ export default {
     //check qty out greeter than qty
     check(index) {
       if (this.detail[index].qty_out > this.detail[index].qty) {
-        this.$toast.error("Qty Out can't be greater than Qty");
+        alert("Qty Out can't be greater than Qty");
         return;
       }
       this.detail[index].on_done = this.detail[index].qty_out;
       this.detail[index].qty_out = this.detail[index].qty;
       this.detail[index].on_process = 0;
       this.detail[index].status = "DONE";
+    },
+
+    calculateQty(index) {
+      if (this.detail[index].qty_out > this.detail[index].qty) {
+        alert("Qty Out can't be greater than Qty");
+        this.detail[index].qty_out = this.detail[index].qty;
+        return;
+      }
+      this.detail[index].on_process = this.detail[index].qty - this.detail[index].qty_out;
     },
   },
 

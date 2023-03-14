@@ -33,11 +33,10 @@ const routes = [
           icon: 'mdi-view-dashboard',
           visible: true,
         },
-        component: () => import('@/views/HomeView.vue'),
+        component: () => import('@/views/Home.vue'),
       },
     ],
   },
-
 ]
 
 const router = createRouter({

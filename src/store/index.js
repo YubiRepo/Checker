@@ -6,6 +6,7 @@ import SecureLS from "secure-ls";
 import Auth from "./modules/auth";
 import User from "./modules/user";
 import Sales_Order from "./modules/sales_order";
+import Sales_Order_Remain from "./modules/sales_order_remain";
 
 
 const secureLS = new SecureLS({
@@ -26,6 +27,7 @@ export default createStore({
         auth: Auth,
         user: User,
         sales_order: Sales_Order,
+        sales_order_remain: Sales_Order_Remain,
     },
     plugins: [persist_state],
 });

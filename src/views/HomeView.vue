@@ -30,6 +30,9 @@
         </v-col>
         <v-col xs="12" sm="12" md="6" lg="3" class="text-end">
           <div class="tool_btns">
+            <v-btn color="primary" variant="flat" @click.stop="drawer = !drawer">
+              Check Item
+            </v-btn>
             <v-btn variant="text" />
             <v-btn variant="text" append-icon="mdi-chevron-down" class="mr-2">
               <v-avatar size="x-small" class="avatarmr-2">
@@ -90,6 +93,12 @@
         </v-responsive>
       </v-container>
     </v-main>
+    <v-navigation-drawer v-model="drawer" temporary location="right" :width="400">
+      <v-list density="compact" nav class="width:100%">
+        <v-list-item prepend-icon="mdi-view-dashboard" style="max-width: auto;" title="Home" value="home"></v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <v-main style="width: 500px"></v-main>
     <v-snackbar v-model="snackbar" :timeout="3000" color="success" location="top">
       Order has been updated.
 
@@ -123,6 +132,7 @@ export default {
     return {
       tab: null,
       snackbar: false,
+      drawer: false,
     };
   },
   methods: {
@@ -161,3 +171,9 @@ export default {
   }
 };
 </script>
+<style>
+.v-navigation-drawer--end.v-locale--is-rtl,
+.v-locale--is-rtl .v-navigation-drawer--end {
+  left: auto !important;
+}
+</style>
