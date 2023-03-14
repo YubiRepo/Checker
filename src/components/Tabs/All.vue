@@ -3,8 +3,8 @@
     <v-main>
       <v-responsive>
         <v-row>
-          <v-card-title>
-            <h3><strong>Dine In</strong></h3>
+          <v-card-title class="font_size">
+            Dine In
           </v-card-title>
         </v-row>
         <v-form ref="form_data">
@@ -13,18 +13,23 @@
               <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
                 @click="getSalesOrderDetail(row.id, row.table.no_table)">
                 <v-row class="flex mx-auto">
-                  <v-col width="100%" class="text-center" lg="12">
-                    <h3 class="mb-4">Order No</h3>
-                    <v-card-text style="font-size: 4rem;overflow: auto;">
-                      {{ row.no_order }}
-                    </v-card-text>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-2 font_card">Order No</h3>
                   </v-col>
-                  <v-col class="text-right mt-4" lg="4"> </v-col>
                 </v-row>
-                <v-divider></v-divider>
                 <v-row>
-                  <v-col class="text-center mt-4" lg="12">
-                    <h3>Table No. {{ row.table?.no_table }}</h3>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-2 font_number"> {{ row.no_order }}</h3>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col class="text-center" lg="12">
+                    <v-divider :thickness="2"></v-divider>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-2 font_card">Table No. {{ row.table?.no_table }}</h3>
                   </v-col>
                 </v-row>
               </v-card>
@@ -32,31 +37,36 @@
           </v-row>
         </v-form>
         <br />
-        <v-divider></v-divider>
+        <v-divider :thickness="3"></v-divider>
         <br />
         <v-row>
-          <v-card-title>
-            <h3><strong>Take Away</strong></h3>
+          <v-card-title class="font_size">
+            Take Away
           </v-card-title>
         </v-row>
         <v-form ref="form_data">
           <v-row class="mt-3">
             <v-col v-for="row in SalesOrder.take_away" cols="2" :key="row.id">
               <v-card height="100%" :color="row.status == 'DONE' ? 'green' : 'yellow'" class="pa-3"
-                @click="getSalesOrderDetail(row.id, row.table?.no_table)">
+                @click="getSalesOrderDetail(row.id, row.table.no_table)">
                 <v-row class="flex mx-auto">
-                  <v-col width="100%" class="text-center" lg="12">
-                    <h3 class="mb-4">Order No</h3>
-                    <v-card-text style="font-size: 4rem">
-                      {{ row.no_order }}
-                    </v-card-text>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-2 font_card">Order No</h3>
                   </v-col>
-                  <v-col class="text-right mt-4" lg="4"> </v-col>
                 </v-row>
-                <v-divider></v-divider>
                 <v-row>
-                  <v-col class="text-left mt-4" lg="12">
-                    <h3>Customer : {{ row.customer?.name }}</h3>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-2 font_number"> {{ row.no_order }}</h3>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col class="text-center" lg="12">
+                    <v-divider :thickness="2"></v-divider>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-2 font_card">{{ row.customer?.name }}</h3>
                   </v-col>
                 </v-row>
               </v-card>
@@ -67,14 +77,16 @@
     </v-main>
 
     <v-dialog v-model="dialog" v-if="dialog" hide-overlay width="60%">
-      <v-card width="100%">
-        <v-row>
-          <v-col class="text-right">
-            <v-card-title class="text-h5">
+      <v-card>
+        <v-row no-gutter>
+          <v-col xs="12" sm="12" md="4" lg="4">
+          </v-col>
+          <v-col xs="12" sm="12" md="4" lg="4" class="text-center">
+            <v-card-title class="font_card">
               Summary
             </v-card-title>
           </v-col>
-          <v-col>
+          <v-col xs="12" sm="12" md="4" lg="4" class="text-right">
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="green" variant="flat" @click="dialog = false">
@@ -83,64 +95,69 @@
             </v-card-actions>
           </v-col>
         </v-row>
-        <v-divider></v-divider>
+        <v-divider :thickness="2"></v-divider>
         <v-card-text>
-          <v-row>
-            <v-col cols="2" class="text-center ml-15 rounded">
-              <v-card class="pa-3" height="100%" elevation="1">
-                <v-card-title>
-                  <h5>Order No. {{ header.no_order }}</h5>
-                  <h5>Table No. {{ no_table }}</h5>
-                </v-card-title>
+          <v-row no-gutter style="justify-content: center;">
+            <v-col xs="12" sm="12" md="4" lg="3">
+              <v-card height="100%" color="green" class="pa-3">
+                <v-row>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-3 font_number">{{
+                      this.detail.reduce(
+                        (acc, item) =>
+                          acc + item.on_done,
+                        0
+                      )
+                    }}</h3>
+                  </v-col>
+                </v-row>
+                <v-divider :thickness="2"></v-divider>
+                <v-row>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-2 font_card">Done</h3>
+                  </v-col>
+                </v-row>
               </v-card>
             </v-col>
-            <v-col cols="7" class="text-center">
-              <v-row class="pl-15">
-                <v-col cols="4">
-                  <v-card color="green" class="pa-3">
-                    <v-card-title>
-                      <h1>
-                        {{
-                          this.detail.reduce(
-                            (acc, item) =>
-                              acc + item.on_done,
-                            0
-                          )
-                        }}
-                      </h1>
-                      <h5>Done</h5>
-                    </v-card-title>
-                  </v-card>
-                </v-col>
-                <v-col cols="4">
-                  <v-card color="yellow" class="pa-3">
-                    <v-card-title>
-                      <h1>
-                        {{
-                          this.detail.reduce(
-                            (acc, item) => acc + item.qty,
-                            0
-                          ) -
-                          this.detail.reduce(
-                            (acc, item) =>
-                              acc + item.on_done,
-                            0
-                          )
-                        }}
-                      </h1>
-                      <h5>Not Done</h5>
-                    </v-card-title>
-                  </v-card>
-                </v-col>
-                <v-col cols="4">
-                  <v-card color="black" class="pa-3">
-                    <v-card-title>
-                      <h1>{{ detail.length }}</h1>
-                      <h5>Items</h5>
-                    </v-card-title>
-                  </v-card>
-                </v-col>
-              </v-row>
+            <v-col xs="12" sm="12" md="4" lg="3">
+              <v-card height="100%" color="yellow" class="pa-3">
+                <v-row>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-3 font_number"> {{
+                      this.detail.reduce(
+                        (acc, item) => acc + item.qty,
+                        0
+                      ) -
+                      this.detail.reduce(
+                        (acc, item) =>
+                          acc + item.on_done,
+                        0
+                      )
+                    }}</h3>
+                  </v-col>
+                </v-row>
+                <v-divider :thickness="2"></v-divider>
+                <v-row>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-2 font_card">Not Done</h3>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-col>
+            <v-col xs="12" sm="12" md="4" lg="3">
+              <v-card height="100%" color="black" class="pa-3">
+                <v-row>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-3 font_number" style="color:white"> {{ detail.length }}</h3>
+                  </v-col>
+                </v-row>
+                <v-divider :thickness="3" color="white"></v-divider>
+                <v-row>
+                  <v-col class="text-center" lg="12">
+                    <h3 class="ma-2 font_card" style="color:white">Items</h3>
+                  </v-col>
+                </v-row>
+              </v-card>
             </v-col>
           </v-row>
           <v-row>
@@ -320,3 +337,26 @@ export default {
   },
 };
 </script>
+<style>
+.font {
+  font-family: Arial, sans-serif;
+}
+
+.font_size {
+  font-size: 20px;
+  font-weight: 900;
+  font-family: Arial, sans-serif;
+}
+
+.font_card {
+  font-size: 20px;
+  font-family: Arial, sans-serif;
+  color: #000000;
+}
+
+.font_number {
+  font-size: 47px;
+  font-family: Arial, sans-serif;
+  color: #000000;
+}
+</style>

@@ -22,21 +22,21 @@
                     <v-row>
                         <v-col class="mt-2" cols="2">
                             <v-card color="primary">
-                                <v-card-title>Din In : {{ SalesOrder.dine_in_count }}</v-card-title>
+                                <v-card-title class="font">Din In : {{ SalesOrder.dine_in_count }}</v-card-title>
                             </v-card>
                         </v-col>
                         <v-col class="mt-2" cols="2">
                             <v-card color="primary">
-                                <v-card-title>Take Away : {{ SalesOrder.take_away_count }}</v-card-title>
+                                <v-card-title class="font">Take Away : {{ SalesOrder.take_away_count }}</v-card-title>
                             </v-card>
                         </v-col>
                         <v-col class="mt-2 text-center" cols="4">
-                            <v-card-title style="font-size:25px;font-weight: bold;">Order List</v-card-title>
+                            <v-card-title class="font_size"><b>Order List</b></v-card-title>
                         </v-col>
                         <v-col cols="1"></v-col>
                         <v-col class="mt-2" cols="3">
                             <v-card color="primary">
-                                <v-card-title>Total Sales Order : {{ SalesOrder.all_count }}</v-card-title>
+                                <v-card-title class="font">Total Sales Order : {{ SalesOrder.all_count }}</v-card-title>
                             </v-card>
                         </v-col>
                     </v-row>
@@ -47,22 +47,22 @@
                             <v-tabs v-model="tab" color="#FF6565" align-tabs="center">
                                 <v-tab value="1">
                                     <v-card color="white" width="200">
-                                        <v-card-title>
-                                            <h3><strong>All</strong></h3>
+                                        <v-card-title class="font_size">
+                                            All
                                         </v-card-title>
                                     </v-card>
                                 </v-tab>
                                 <v-tab value="2">
                                     <v-card color="white" width="200">
-                                        <v-card-title>
-                                            <h3><strong>Dine In</strong></h3>
+                                        <v-card-title class="font_size">
+                                            Dine In
                                         </v-card-title>
                                     </v-card>
                                 </v-tab>
                                 <v-tab value="3">
                                     <v-card color="white" width="200">
-                                        <v-card-title>
-                                            <h3><strong>Take Away</strong></h3>
+                                        <v-card-title class="font_size">
+                                            Take Away
                                         </v-card-title>
                                     </v-card>
                                 </v-tab>
@@ -101,7 +101,6 @@
                 </v-navigation-drawer>
                 <v-snackbar v-model="snackbar" :timeout="3000" color="success" location="top">
                     Order has been updated.
-
                     <template v-slot:actions>
                         <v-btn class="white--text" variant="text" @click="snackbar = false">
                             Close
@@ -120,7 +119,6 @@ import TabDineIn from "../components/Tabs/DineIn.vue";
 import TabTakeAway from "../components/Tabs/TakeAway.vue";
 import { mapGetters, mapMutations } from "vuex";
 import $axios from "@/plugins/api.js";
-// import { isNumber } from "util";
 
 export default {
     name: "Home",
@@ -190,3 +188,15 @@ export default {
     }
 };
 </script>
+
+<style>
+.font {
+    font-family: Arial, sans-serif;
+}
+
+.font_size {
+    font-size: 20px;
+    font-weight: 900;
+    font-family: Arial, sans-serif;
+}
+</style>
